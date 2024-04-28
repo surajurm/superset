@@ -901,8 +901,14 @@ class Superset(BaseSupersetView):
         """Personalized welcome page"""
         if not g.user or not get_user_id():
             if conf["PUBLIC_ROLE_LIKE"]:
+                print("logged user")
+                print(g.user)
                 return self.render_template("superset/public_welcome.html")
+
             return redirect(appbuilder.get_url_for_login)
+
+        print("user")
+        print(g.user)
 
         if welcome_dashboard_id := (
             db.session.query(UserAttribute.welcome_dashboard_id)

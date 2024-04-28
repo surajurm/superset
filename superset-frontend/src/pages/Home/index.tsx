@@ -160,6 +160,7 @@ function Welcome({ user, addDangerToast }: WelcomeProps) {
   const userid = user.userId;
   const id = userid!.toString(); // confident that user is not a guest user
   const params = rison.encode({ page_size: 6 });
+  const isAdminLogged  = user.roles.hasOwnProperty('Admin');
   const recent = `/api/v1/log/recent_activity/?q=${params}`;
   const [activeChild, setActiveChild] = useState('Loading');
   const userKey = dangerouslyGetItemDoNotUse(id, null);
@@ -185,6 +186,7 @@ function Welcome({ user, addDangerToast }: WelcomeProps) {
     setActiveState(state);
     setItem(LocalStorageKeys.HomepageCollapseState, state);
   };
+
 
   const SubmenuExtension = extensionsRegistry.get('home.submenu');
   const WelcomeMessageExtension = extensionsRegistry.get('welcome.message');
@@ -359,6 +361,7 @@ function Welcome({ user, addDangerToast }: WelcomeProps) {
         <SubMenu {...menuData} />
       )}
       <WelcomeContainer>
+        {isAdminLogged ? <>
         {WelcomeMessageExtension && <WelcomeMessageExtension />}
         {WelcomeTopExtension && <WelcomeTopExtension />}
         {WelcomeMainExtension && <WelcomeMainExtension />}
@@ -431,7 +434,13 @@ function Welcome({ user, addDangerToast }: WelcomeProps) {
               )}
             </Collapse>
           </>
-        )}
+        )} </> : 
+        <>  
+          {WelcomeMessageExtension && <WelcomeMessageExtension />}   
+          {WelcomeTopExtension && <WelcomeTopExtension />}
+          {WelcomeMainExtension && <WelcomeMainExtension />}
+
+          <h2>Non Admin user Logged!</h2></>}
       </WelcomeContainer>
     </>
   );
